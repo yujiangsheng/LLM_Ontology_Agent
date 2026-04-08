@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM + Ontology 多智能体系统</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <h1>🧠 LLM + Ontology 多智能体系统</h1>
+      <span class="version">v0.1.0</span>
+    </div>
+    <button id="btn-shutdown" class="btn btn-danger" title="终止 Web 服务">⏻ 退出</button>
+  </header>
+
+  <nav>
+    <button class="tab active" data-tab="build">🏗️ 构建</button>
+    <button class="tab" data-tab="reason">🧠 推理</button>
+    <button class="tab" data-tab="memory">📊 记忆</button>
+    <button class="tab" data-tab="evolve">🔄 演化</button>
+  </nav>
+
+  <main>
+    <!-- ════════════ 构建 Tab ════════════ -->
+    <section id="tab-build" class="tab-panel active">
+      <h2>从领域文档构建 OWL 本体 + 知识图谱</h2>
+
+      <div class="form-group">
+        <label for="domain-name">领域名称</label>
+        <input type="text" id="domain-name" placeholder="例: 设备故障诊断" value="domain">
+      </div>
+
+      <div class="input-switch">
+        <button class="switch-btn active" data-mode="text">文本输入</button>
+        <button class="switch-btn" data-mode="file">文件上传</button>
+      </div>
+
+      <div id="build-text-mode" class="build-mode active">
+        <div class="form-group">
+          <label for="domain-text">领域文档内容</label>
+          <textarea id="domain-text" rows="12" placeholder="粘贴领域文档内容 ..."></textarea>
+        </div>
+        <button id="btn-build-text" class="btn btn-primary">🚀 开始构建</button>
+      </div>
+
+      <div id="build-file-mode" class="build-mode">
+        <div class="form-group">
+          <label for="domain-file">选择文件 (.txt / .md / .docx)</label>
+          <input type="file" id="domain-file" accept=".txt,.md,.csv,.json,.docx,.pdf">
+        </div>
+        <button id="btn-build-file" class="btn btn-primary">📁 上传并构建</button>
+      </div>
+
+      <div class="actions-row">
+        <button id="btn-load" class="btn btn-secondary">📂 加载已有产物</button>
+      </div>
+
+      <div id="build-output" class="output-box hidden"></div>
+    </section>
+
+    <!-- ════════════ 推理 Tab ════════════ -->
+    <section id="tab-reason" class="tab-panel">
+      <h2>领域推理问答</h2>
+
+      <div class="form-group">
+        <label for="question-input">请输入推理问题</label>
+        <textarea id="question-input" rows="3" placeholder="例: 哪些设备处于过热风险？"></textarea>
+      </div>
+      <button id="btn-reason" class="btn btn-primary">🧠 开始推理</button>
+
+      <div id="reason-answer" class="output-box hidden"></div>
+      <div id="reason-log" class="log-box hidden"></div>
+    </section>
+
+    <!-- ════════════ 记忆 Tab ════════════ -->
+    <section id="tab-memory" class="tab-panel">
+      <h2>四层记忆系统</h2>
+
+      <div class="actions-row">
+        <button id="btn-refresh-memory" class="btn btn-secondary">🔄 刷新统计</button>
+      </div>
+
+      <div id="memory-stats" class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-working">-</div>
+          <div class="stat-label">工作记忆</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-longterm">-</div>
+          <div class="stat-label">长期记忆</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-experience">-</div>
+          <div class="stat-label">经验库</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-knowledge">-</div>
+          <div class="stat-label">知识库</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-ontology">-</div>
+          <div class="stat-label">Ontology</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-rag">-</div>
+          <div class="stat-label">RAG 索引</div>
+        </div>
+      </div>
+
+      <h3>添加 RAG 文档</h3>
+      <div class="form-group">
+        <input type="file" id="rag-file" accept=".txt,.md,.csv,.json,.docx,.pdf">
+      </div>
+      <button id="btn-add-doc" class="btn btn-secondary">📄 加入 RAG 索引</button>
+      <div id="rag-output" class="output-box hidden"></div>
+    </section>
+
+    <!-- ════════════ 演化 Tab ════════════ -->
+    <section id="tab-evolve" class="tab-panel">
+      <h2>元认知自我演化 (Prefrontal Lobe)</h2>
+      <p class="description">
+        基于最近一次构建的结果，执行完整的元认知循环：
+        <strong>监控 → 评估 → 诊断 → 优化 → 验证 → 应用/回滚</strong>
+      </p>
+      <button id="btn-evolve" class="btn btn-primary">🔄 执行演化</button>
+      <div id="evolve-output" class="output-box hidden"></div>
+    </section>
+  </main>
+
+  <!-- ════════════ 全局加载遮罩 ════════════ -->
+  <div id="loading-overlay" class="hidden">
+    <div class="spinner"></div>
+    <p id="loading-text">处理中，请稍候 ...</p>
+  </div>
+
+  <!-- ════════════ 退出确认对话框 ════════════ -->
+  <div id="shutdown-dialog" class="dialog-overlay hidden">
+    <div class="dialog">
+      <h3>⚠️ 确认退出</h3>
+      <p>这将终止 Web 服务，所有未保存的状态将丢失。</p>
+      <div class="dialog-actions">
+        <button id="btn-shutdown-cancel" class="btn btn-secondary">取消</button>
+        <button id="btn-shutdown-confirm" class="btn btn-danger">确认退出</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

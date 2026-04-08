@@ -1,0 +1,24 @@
+# LLM_Ontology_Agent — 核心依赖
+# ================================
+# RDF / OWL / SPARQL
+rdflib>=7.0
+
+# OWL 2 RL 推理闭包
+owlrl>=6.0
+
+# SHACL 约束验证
+pyshacl>=0.25
+
+# .docx 文档加载
+python-docx>=1.0
+
+# Web 前端
+flask>=3.0
+
+# ── 可选依赖 ──────────────────────────
+# PDF 支持 (pip install PyMuPDF):
+#   PyMuPDF>=1.23
+
+# 开发/测试:
+#   pytest>=7.0
+#   ruff>=0.4
