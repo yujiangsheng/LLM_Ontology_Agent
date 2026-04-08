@@ -4,9 +4,9 @@
 
 - **智能体**: OntologyBuilderAgent
 - **模块**: agents/ontology_builder.py
-- **版本**: 1.0.0
+- **版本**: **版本**: .1.1
 - **最后修改**: 2026-04-08
-- **修改者**: 初始版本
+- **修改者**: PrefrontalLobe 自动演化
 
 ## 角色定位
 
@@ -67,9 +67,11 @@
 1. **LLM 草案 + 代码构建**: LLM 产出 JSON 规范，Python 代码保证 OWL 语法正确
 2. **按模块生成**: 分别处理 classes / object_properties / data_properties / axioms
 3. **等价类公理解析**: 自动解析 `"X and (P some Y)"` 模式为 `owl:equivalentClass` + `owl:Restriction`
-4. **XSD 数据类型映射**: 支持 xsd:string/float/double/integer/boolean/dateTime/date
-5. **双格式输出**: 同时保存 RDF/XML (.owl) 和 Turtle (.ttl)
-6. **类层级**: 通过 parent 字段构建 rdfs:subClassOf 层级
+4. **复杂 DL 表达式支持**: 引入表达式解析模块，识别并转换 disjointWith、propertyChain 等高级 DL 公式
+5. **XSD 数据类型映射**: 支持 xsd:string/float/double/integer/boolean/dateTime/date
+6. **双格式输出**: 同时保存 RDF/XML (.owl) 和 Turtle (.ttl)
+7. **类层级**: 通过 parent 字段构建 rdfs:subClassOf 层级
+7. **JSON 校验与标准化**: 在 LLM 输出 JSON 后，使用 schema 校验器验证结构是否符合预期格式，并对类名、属性名等字段做标准化处理（如去除空格、特殊字符）
 
 ## 评估指标
 
@@ -92,3 +94,5 @@
 | 日期 | 版本 | 修改内容 | 触发原因 | 效果 |
 |------|------|---------|---------|------|
 | 2026-04-08 | 1.0.0 | 初始版本 | - | - |
+| 2026-04-08 | ?.?.? | strategy_add: 增加一个校验步骤：在 LLM 输出 JSON 后，使用 schema 校验器验证 | 自动诊断 | 待验证 |
+| 2026-04-08 | ?.?.? | strategy_add: 引入一个表达式解析模块，用于识别并转换更复杂的 DL 公式（如 disjoint | 自动诊断 | 待验证 |

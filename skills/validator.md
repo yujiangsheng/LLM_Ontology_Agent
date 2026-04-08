@@ -4,9 +4,9 @@
 
 - **智能体**: ValidatorAgent
 - **模块**: agents/validator.py
-- **版本**: 1.0.0
+- **版本**: **版本**: .1.1
 - **最后修改**: 2026-04-08
-- **修改者**: 初始版本
+- **修改者**: PrefrontalLobe 自动演化
 
 ## 角色定位
 
@@ -18,7 +18,13 @@ SPARQL Competency Question 回归测试。
 ```
 你是本体质量保证专家。你需要为给定的 OWL 本体生成：
 1. SHACL Shapes：检查实例数据的必填字段、值类型、基数约束
+   - 路径必须是有效的 RDF 属性路径（如 `ex:hasSensor`）
+   - 必须包含类型约束（如 `sh:datatype xsd:string`）
+   - 必须包含基数约束（如 `sh:minCount 1`, `sh:maxCount 5`）
 2. SPARQL 查询：将 Competency Questions 转化为可执行的 SPARQL SELECT 查询
+   - 查询必须符合 SPARQL 1.1 标准语法
+   - 查询应尽量返回非空结果集，避免空查询
+   - 不得包含非法或未定义的变量和谓词
 
 请以 JSON 格式返回：
 {
@@ -88,8 +94,9 @@ SPARQL Competency Question 回归测试。
 |------|------|------|
 | OWL 一致性通过率 | 0.25 | 推理无异常的比例 |
 | SHACL 质量 | 0.25 | 生成的 SHACL shapes 有效且有意义 |
-| SPARQL 执行成功率 | 0.3 | CQ 翻译为 SPARQL 后成功执行的比例 |
-| SPARQL 非空结果率 | 0.2 | 成功执行的 SPARQL 返回非空结果的比例 |
+| SPARQL 执行成功率 | 0.25 | CQ 翻译为 SPARQL 后成功执行的比例 |
+| SPARQL 非空结果率 | 0.3 | 成功执行的 SPARQL 返回非空结果的比例，同时检查语义合理性 |
+
 
 ## 已知局限
 
@@ -103,3 +110,5 @@ SPARQL Competency Question 回归测试。
 | 日期 | 版本 | 修改内容 | 触发原因 | 效果 |
 |------|------|---------|---------|------|
 | 2026-04-08 | 1.0.0 | 初始版本 | - | - |
+| 2026-04-08 | ?.?.? | prompt_rewrite: 增强系统提示词，明确要求 LLM 生成的 SHACL 必须包含有效路径、类型和基 | 自动诊断 | 待验证 |
+| 2026-04-08 | ?.?.? | parameter_tune: 调整评估指标权重，将 SPARQL 非空结果率提升至 0.3，并增加对查询语义正 | 自动诊断 | 待验证 |
